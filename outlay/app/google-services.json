@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "156716864466",
+    "firebase_url": "https://iande-b238e.firebaseio.com",
+    "project_id": "iande-b238e",
+    "storage_bucket": "iande-b238e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:156716864466:android:95649c21a8bc6266",
+        "android_client_info": {
+          "package_name": "app.outlay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "156716864466-ct68luieko3qv93oqbd9b852qtftp2pe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBE67mtSH9gMq05BwHWOfkQ69i0-_lWjs8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
