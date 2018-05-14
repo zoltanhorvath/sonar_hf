@@ -12,6 +12,9 @@ import android.view.inputmethod.InputMethodManager;
  * Created by Bogdan Melnychuk on 1/15/16.
  */
 public final class DeviceUtils {
+    private DeviceUtils() {
+    }
+
     public static DisplayMetrics getScreenSize(Activity activity) {
         DisplayMetrics metrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);

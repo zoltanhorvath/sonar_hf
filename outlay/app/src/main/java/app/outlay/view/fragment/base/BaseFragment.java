@@ -16,11 +16,18 @@ import app.outlay.view.activity.base.BaseActivity;
 
 public interface BaseFragment {
     BaseActivity getBaseActivity();
+
     App getApp();
+
     AppComponent getAppComponent();
+
     void setToolbar(Toolbar toolbar);
+
     Analytics analytics();
+
     ResourceHelper getResourceHelper();
+
     OutlayTheme getOutlayTheme();
+
     AppPreferences appPreferences();
 }

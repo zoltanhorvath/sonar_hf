@@ -36,11 +36,6 @@ public class CategoriesDraggableGridAdapter extends RecyclerView.Adapter<Categor
         this.outlayTheme = outlayTheme;
     }
 
-    public void setItems(List<Category> items) {
-        this.items = items;
-        notifyDataSetChanged();
-    }
-
     public void setOnCategoryClickListener(OnCategoryClickListener listener) {
         this.clickListener = listener;
     }
@@ -80,6 +75,11 @@ public class CategoriesDraggableGridAdapter extends RecyclerView.Adapter<Categor
 
     public List<Category> getItems() {
         return items;
+    }
+
+    public void setItems(List<Category> items) {
+        this.items = items;
+        notifyDataSetChanged();
     }
 
     @Override

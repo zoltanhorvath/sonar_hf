@@ -2,7 +2,9 @@ package app.outlay.mvp.presenter;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.hannesdorfmann.mosby.mvp.*;
+import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
+
+import javax.inject.Inject;
 
 import app.outlay.core.executor.DefaultSubscriber;
 import app.outlay.domain.interactor.LinkAccountUseCase;
@@ -12,8 +14,6 @@ import app.outlay.domain.interactor.UserSignUpUseCase;
 import app.outlay.domain.model.Credentials;
 import app.outlay.domain.model.User;
 import app.outlay.mvp.view.LoginView;
-
-import javax.inject.Inject;
 
 /**
  * Created by bmelnychuk on 10/26/16.

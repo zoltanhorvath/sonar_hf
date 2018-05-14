@@ -1,8 +1,6 @@
 package app.outlay.executor;
 
 
-import app.outlay.core.executor.ThreadExecutor;
-
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
@@ -11,6 +9,8 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import app.outlay.core.executor.ThreadExecutor;
 
 @Singleton
 public class JobExecutor implements ThreadExecutor {

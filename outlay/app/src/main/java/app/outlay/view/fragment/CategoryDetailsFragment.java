@@ -15,6 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import java.util.Random;
+
+import javax.inject.Inject;
+
 import app.outlay.domain.model.Category;
 import app.outlay.mvp.presenter.CategoryDetailsPresenter;
 import app.outlay.mvp.view.CategoryDetailsView;
@@ -23,11 +27,6 @@ import app.outlay.view.adapter.IconsGridAdapter;
 import app.outlay.view.alert.Alert;
 import app.outlay.view.fragment.base.BaseMvpFragment;
 import app.outlay.view.helper.TextWatcherAdapter;
-
-import java.util.Random;
-
-import javax.inject.Inject;
-
 import butterknife.Bind;
 import uz.shift.colorpicker.LineColorPicker;
 
@@ -53,14 +52,14 @@ public class CategoryDetailsFragment extends BaseMvpFragment<CategoryDetailsView
     TextInputLayout categoryInputLayout;
 
     @Inject
-    CategoryDetailsPresenter presenter;
+    CategoryDetailsPresenter categoryDetailsPresenter;
 
     private IconsGridAdapter adapter;
     private Category category;
 
     @Override
     public CategoryDetailsPresenter createPresenter() {
-        return presenter;
+        return categoryDetailsPresenter;
     }
 
     @Override
@@ -99,13 +98,13 @@ public class CategoryDetailsFragment extends BaseMvpFragment<CategoryDetailsView
                     } else {
                         analytics().trackCategoryUpdated(category);
                     }
-                    presenter.updateCategory(getCategory());
+                    categoryDetailsPresenter.updateCategory(getCategory());
                 }
                 break;
             case app.outlay.R.id.action_delete:
                 category = getCategory();
                 analytics().trackCategoryDeleted(category);
-                presenter.deleteCategory(category);
+                categoryDetailsPresenter.deleteCategory(category);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -126,7 +125,7 @@ public class CategoryDetailsFragment extends BaseMvpFragment<CategoryDetailsView
         if (getArguments().containsKey(ARG_CATEGORY_PARAM)) {
             String categoryId = getArguments().getString(ARG_CATEGORY_PARAM);
             getActivity().setTitle(getString(app.outlay.R.string.caption_edit_category));
-            presenter.getCategory(categoryId);
+            categoryDetailsPresenter.getCategory(categoryId);
         } else {
             getActivity().setTitle(getString(app.outlay.R.string.caption_edit_category));
             showCategory(new Category());

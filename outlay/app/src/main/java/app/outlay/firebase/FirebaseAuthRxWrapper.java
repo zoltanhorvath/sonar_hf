@@ -6,11 +6,12 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
-import app.outlay.domain.model.User;
 
 import javax.inject.Inject;
 
+import app.outlay.domain.model.User;
 import rx.Observable;
+import rx.Subscriber;
 
 /**
  * Created by bmelnychuk on 10/26/16.
@@ -44,64 +45,41 @@ public class FirebaseAuthRxWrapper {
     public Observable<AuthResult> signUp(String email, String password) {
         return Observable.create(subscriber -> {
             Task<AuthResult> task = firebaseAuth.createUserWithEmailAndPassword(email, password);
-            task.addOnCompleteListener(resultTask -> {
-                if (task.isSuccessful()) {
-                    AuthResult authResult = task.getResult();
-                    subscriber.onNext(authResult);
-                    subscriber.onCompleted();
-                } else {
-                    Exception e = task.getException();
-                    subscriber.onError(e);
-                }
-            });
+            addCompleteListenerToTask(subscriber, task);
         });
     }
 
     public Observable<AuthResult> signIn(String email, String password) {
         return Observable.create(subscriber -> {
             Task<AuthResult> task = firebaseAuth.signInWithEmailAndPassword(email, password);
-            task.addOnCompleteListener(resultTask -> {
-                if (task.isSuccessful()) {
-                    AuthResult authResult = task.getResult();
-                    subscriber.onNext(authResult);
-                    subscriber.onCompleted();
-                } else {
-                    Exception e = task.getException();
-                    subscriber.onError(e);
-                }
-            });
+            addCompleteListenerToTask(subscriber, task);
         });
     }
 
     public Observable<AuthResult> signInAnonymously() {
         return Observable.create(subscriber -> {
             Task<AuthResult> task = firebaseAuth.signInAnonymously();
-            task.addOnCompleteListener(resultTask -> {
-                if (task.isSuccessful()) {
-                    AuthResult authResult = task.getResult();
-                    subscriber.onNext(authResult);
-                    subscriber.onCompleted();
-                } else {
-                    Exception e = task.getException();
-                    subscriber.onError(e);
-                }
-            });
+            addCompleteListenerToTask(subscriber, task);
+        });
+    }
+
+    private void addCompleteListenerToTask(Subscriber<? super AuthResult> subscriber, Task<AuthResult> task) {
+        task.addOnCompleteListener(resultTask -> {
+            if (task.isSuccessful()) {
+                AuthResult authResult = task.getResult();
+                subscriber.onNext(authResult);
+                subscriber.onCompleted();
+            } else {
+                Exception e = task.getException();
+                subscriber.onError(e);
+            }
         });
     }
 
     public Observable<AuthResult> linkAccount(AuthCredential credentials) {
         return Observable.create(subscriber -> {
             Task<AuthResult> task = firebaseAuth.getCurrentUser().linkWithCredential(credentials);
-            task.addOnCompleteListener(resultTask -> {
-                if (task.isSuccessful()) {
-                    AuthResult authResult = task.getResult();
-                    subscriber.onNext(authResult);
-                    subscriber.onCompleted();
-                } else {
-                    Exception e = task.getException();
-                    subscriber.onError(e);
-                }
-            });
+            addCompleteListenerToTask(subscriber, task);
         });
     }
 

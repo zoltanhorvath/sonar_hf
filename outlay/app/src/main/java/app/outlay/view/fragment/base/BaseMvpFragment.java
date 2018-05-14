@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.hannesdorfmann.mosby.mvp.MvpFragment;
 import com.hannesdorfmann.mosby.mvp.MvpPresenter;
 import com.hannesdorfmann.mosby.mvp.MvpView;
+
 import app.outlay.App;
 import app.outlay.analytics.Analytics;
 import app.outlay.di.component.AppComponent;
@@ -18,7 +19,6 @@ import app.outlay.impl.AppPreferences;
 import app.outlay.utils.ResourceHelper;
 import app.outlay.view.OutlayTheme;
 import app.outlay.view.activity.base.BaseActivity;
-
 import butterknife.ButterKnife;
 
 /**

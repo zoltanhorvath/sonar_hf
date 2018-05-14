@@ -2,23 +2,23 @@ package app.outlay.view.adapter;
 
 import android.support.v7.widget.RecyclerView;
 
-import app.outlay.domain.model.Expense;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import app.outlay.domain.model.Expense;
 
 /**
  * Created by Bogdan Melnychuk on 1/15/16.
  */
 public abstract class ExpenseAdapter<T extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<T> {
     protected List<Expense> items;
-    protected OnExpenseClickListener onExpenseClickListener;
+    OnExpenseClickListener onExpenseClickListener;
 
-    public ExpenseAdapter(List<Expense> categories) {
+    private ExpenseAdapter(List<Expense> categories) {
         this.items = categories;
     }
 
-    public ExpenseAdapter() {
+    ExpenseAdapter() {
         this(new ArrayList<>());
     }
 

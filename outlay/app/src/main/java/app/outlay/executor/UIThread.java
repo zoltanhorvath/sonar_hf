@@ -1,9 +1,8 @@
 package app.outlay.executor;
 
-import app.outlay.core.executor.PostExecutionThread;
-
 import javax.inject.Inject;
 
+import app.outlay.core.executor.PostExecutionThread;
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -13,7 +12,7 @@ import rx.android.schedulers.AndroidSchedulers;
 public class UIThread implements PostExecutionThread {
 
     @Inject
-    public UIThread() {
+    UIThread() {
     }
 
     @Override

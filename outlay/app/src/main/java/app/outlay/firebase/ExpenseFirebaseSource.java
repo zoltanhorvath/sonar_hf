@@ -7,14 +7,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import app.outlay.core.utils.DateUtils;
-import app.outlay.data.source.CategoryDataSource;
-import app.outlay.data.source.ExpenseDataSource;
-import app.outlay.domain.model.Category;
-import app.outlay.domain.model.Expense;
-import app.outlay.domain.model.User;
-import app.outlay.firebase.dto.ExpenseDto;
-import app.outlay.firebase.dto.adapter.ExpenseAdapter;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,6 +17,14 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import app.outlay.core.utils.DateUtils;
+import app.outlay.data.source.CategoryDataSource;
+import app.outlay.data.source.ExpenseDataSource;
+import app.outlay.domain.model.Category;
+import app.outlay.domain.model.Expense;
+import app.outlay.domain.model.User;
+import app.outlay.firebase.dto.ExpenseDto;
+import app.outlay.firebase.dto.adapter.ExpenseAdapter;
 import rx.Observable;
 
 /**
@@ -32,6 +32,8 @@ import rx.Observable;
  */
 
 public class ExpenseFirebaseSource implements ExpenseDataSource {
+    public static final String USERS = "users";
+    public static final String EXPENSES = "expenses";
     private DatabaseReference mDatabase;
     private CategoryDataSource categoryDataSource;
     private ExpenseAdapter adapter;
@@ -54,9 +56,9 @@ public class ExpenseFirebaseSource implements ExpenseDataSource {
         return Observable.create(subscriber -> {
             String key = expense.getId();
             if (TextUtils.isEmpty(key)) {
-                key = mDatabase.child("users")
+                key = mDatabase.child(USERS)
                         .child(currentUser.getId())
-                        .child("expenses")
+                        .child(EXPENSES)
                         .child(DateUtils.toYearMonthString(expense.getReportedWhen()))
                         .push().getKey();
                 expense.setId(key);
@@ -64,9 +66,9 @@ public class ExpenseFirebaseSource implements ExpenseDataSource {
 
             ExpenseDto expenseDto = adapter.fromExpense(expense);
 
-            DatabaseReference databaseReference = mDatabase.child("users")
+            DatabaseReference databaseReference = mDatabase.child(USERS)
                     .child(currentUser.getId())
-                    .child("expenses")
+                    .child(EXPENSES)
                     .child(DateUtils.toYearMonthString(expense.getReportedWhen()))
                     .child(key);
             databaseReference.addValueEventListener(new ValueEventListener() {
@@ -88,7 +90,7 @@ public class ExpenseFirebaseSource implements ExpenseDataSource {
     @Override
     public Observable<List<Expense>> getExpenses(Date startDate, Date endDate, String categoryId) {
         final Observable<List<Expense>> listObservable = Observable.create(subscriber -> {
-            DatabaseReference databaseReference = mDatabase.child("users").child(currentUser.getId()).child("expenses");
+            DatabaseReference databaseReference = mDatabase.child(USERS).child(currentUser.getId()).child(EXPENSES);
             Query query = databaseReference.orderByKey();
             query = query.startAt(DateUtils.toYearMonthString(startDate)).endAt(DateUtils.toYearMonthString(endDate));
             query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -97,22 +99,12 @@ public class ExpenseFirebaseSource implements ExpenseDataSource {
                     List<Expense> expenses = new ArrayList<>();
                     for (DataSnapshot monthSnapshot : dataSnapshot.getChildren()) {
                         for (DataSnapshot expensesSnapshot : monthSnapshot.getChildren()) {
-                            ExpenseDto expenseDto = expensesSnapshot.getValue(ExpenseDto.class);
-                            if (!TextUtils.isEmpty(categoryId) && !expenseDto.getCategoryId().equals(categoryId)) {
-                                continue;
-                            }
-                            expenses.add(adapter.toExpense(expenseDto));
+                            addExpense(expenses, expensesSnapshot, categoryId);
                         }
                     }
                     // at this point we ave monthly data
 
-                    Iterator<Expense> expenseIterator = expenses.iterator();
-                    while (expenseIterator.hasNext()) {
-                        Expense e = expenseIterator.next();
-                        if (!DateUtils.isInPeriod(e.getReportedWhen(), startDate, endDate)) {
-                            expenseIterator.remove();
-                        }
-                    }
+                    removeExpenses(expenses, startDate, endDate);
 
                     subscriber.onNext(expenses);
                     subscriber.onCompleted();
@@ -133,7 +125,7 @@ public class ExpenseFirebaseSource implements ExpenseDataSource {
                     }
                     return categoryMap;
                 }).switchMap(categoryMap ->
-                        listObservable.flatMap(expenses -> Observable.from(expenses))
+                        listObservable.flatMap(Observable::from)
                                 .map(expense -> {
                                     String currentCatId = expense.getCategory().getId();
                                     return expense.setCategory(categoryMap.get(currentCatId));
@@ -143,6 +135,24 @@ public class ExpenseFirebaseSource implements ExpenseDataSource {
                 );
     }
 
+    private void removeExpenses(List<Expense> expenses, Date startDate, Date endDate) {
+        Iterator<Expense> expenseIterator = expenses.iterator();
+        while (expenseIterator.hasNext()) {
+            Expense e = expenseIterator.next();
+            if (!DateUtils.isInPeriod(e.getReportedWhen(), startDate, endDate)) {
+                expenseIterator.remove();
+            }
+        }
+    }
+
+    private void addExpense(List<Expense> expenses, DataSnapshot expensesSnapshot, String categoryId) {
+        ExpenseDto expenseDto = expensesSnapshot.getValue(ExpenseDto.class);
+        if (!TextUtils.isEmpty(categoryId) && !expenseDto.getCategoryId().equals(categoryId)) {
+            return;
+        }
+        expenses.add(adapter.toExpense(expenseDto));
+    }
+
     @Override
     public Observable<List<Expense>> getExpenses(Date startDate, Date endDate) {
         return getExpenses(startDate, endDate, null);
@@ -150,26 +160,24 @@ public class ExpenseFirebaseSource implements ExpenseDataSource {
 
     @Override
     public Observable<Expense> findExpense(String expenseId, Date date) {
-        Observable<Expense> expenseObservable = Observable.create(subscriber -> {
-            mDatabase.child("users")
-                    .child(currentUser.getId())
-                    .child("expenses")
-                    .child(DateUtils.toYearMonthString(date))
-                    .child(expenseId)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            ExpenseDto expenseDto = dataSnapshot.getValue(ExpenseDto.class);
-                            subscriber.onNext(adapter.toExpense(expenseDto));
-                            subscriber.onCompleted();
-                        }
+        Observable<Expense> expenseObservable = Observable.create(subscriber -> mDatabase.child(USERS)
+                .child(currentUser.getId())
+                .child(EXPENSES)
+                .child(DateUtils.toYearMonthString(date))
+                .child(expenseId)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        ExpenseDto expenseDto = dataSnapshot.getValue(ExpenseDto.class);
+                        subscriber.onNext(adapter.toExpense(expenseDto));
+                        subscriber.onCompleted();
+                    }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            subscriber.onError(databaseError.toException());
-                        }
-                    });
-        });
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        subscriber.onError(databaseError.toException());
+                    }
+                }));
 
         return expenseObservable
                 .switchMap(expense -> categoryDataSource.getById(expense.getCategory().getId())
@@ -183,9 +191,9 @@ public class ExpenseFirebaseSource implements ExpenseDataSource {
     public Observable<Expense> remove(Expense expense) {
         return Observable.create(subscriber -> {
 
-            DatabaseReference expenseRef = mDatabase.child("users")
+            DatabaseReference expenseRef = mDatabase.child(USERS)
                     .child(currentUser.getId())
-                    .child("expenses")
+                    .child(EXPENSES)
                     .child(DateUtils.toYearMonthString(expense.getReportedWhen()))
                     .child(expense.getId());
             expenseRef.addValueEventListener(new ValueEventListener() {

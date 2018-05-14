@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import app.outlay.domain.model.Category;
 import app.outlay.utils.IconUtils;
 import app.outlay.utils.ResourceHelper;
@@ -17,10 +20,6 @@ import app.outlay.view.adapter.listener.OnCategoryClickListener;
 import app.outlay.view.numpad.NumpadEditable;
 import app.outlay.view.numpad.NumpadValidator;
 import app.outlay.view.numpad.NumpadView;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -36,6 +35,14 @@ public class CategoriesGridAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private NumpadEditable numpadEditable;
     private NumpadValidator numpadValidator;
 
+    public CategoriesGridAdapter(List<Category> categories) {
+        this.items = categories;
+    }
+
+    public CategoriesGridAdapter() {
+        this(new ArrayList<>());
+    }
+
     public void setOnCategoryClickListener(OnCategoryClickListener listener) {
         this.clickListener = listener;
     }
@@ -43,14 +50,6 @@ public class CategoriesGridAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public void attachNumpadEditable(NumpadEditable numpadEditable, NumpadValidator validator) {
         this.numpadEditable = numpadEditable;
         this.numpadValidator = validator;
-    }
-
-    public CategoriesGridAdapter(List<Category> categories) {
-        this.items = categories;
-    }
-
-    public CategoriesGridAdapter() {
-        this(new ArrayList<>());
     }
 
     public void setItems(List<Category> items) {

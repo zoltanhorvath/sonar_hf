@@ -6,15 +6,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import javax.inject.Inject;
+
 import app.outlay.domain.model.User;
 import app.outlay.mvp.presenter.LoginViewPresenter;
 import app.outlay.mvp.view.LoginView;
 import app.outlay.view.LoginForm;
 import app.outlay.view.Navigator;
 import app.outlay.view.fragment.base.BaseMvpFragment;
-
-import javax.inject.Inject;
-
 import butterknife.Bind;
 
 /**
@@ -23,7 +22,7 @@ import butterknife.Bind;
 
 public class LoginFragment extends BaseMvpFragment<LoginView, LoginViewPresenter> implements LoginView {
     @Inject
-    LoginViewPresenter presenter;
+    LoginViewPresenter loginViewPresenter;
 
     @Bind(app.outlay.R.id.loginForm)
     LoginForm loginForm;
@@ -39,7 +38,7 @@ public class LoginFragment extends BaseMvpFragment<LoginView, LoginViewPresenter
 
     @Override
     public LoginViewPresenter createPresenter() {
-        return presenter;
+        return loginViewPresenter;
     }
 
     @Override
@@ -54,19 +53,19 @@ public class LoginFragment extends BaseMvpFragment<LoginView, LoginViewPresenter
 
         loginForm.setOnSignUpClickListener((email, password, src) -> {
             analytics().trackSignUp();
-            presenter.signUp(email, password);
+            loginViewPresenter.signUp(email, password);
         });
         loginForm.setOnSignInClickListener((email, password, src) -> {
             analytics().trackEmailSignIn();
-            presenter.signIn(email, password);
+            loginViewPresenter.signIn(email, password);
         });
-        loginForm.setOnPasswordForgetClick(() -> presenter.resetPassword("melnychuk.bogdan@gmail.com"));
+        loginForm.setOnPasswordForgetClick(() -> loginViewPresenter.resetPassword("melnychuk.bogdan@gmail.com"));
         loginForm.setOnSkipButtonClick(v -> {
             analytics().trackGuestSignIn();
-            presenter.signInGuest();
+            loginViewPresenter.signInGuest();
         });
 
-        presenter.trySignIn();
+        loginViewPresenter.trySignIn();
     }
 
     @Override

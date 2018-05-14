@@ -33,7 +33,7 @@ public class MainActivity extends DrawerActivity {
 
     @Override
     public void onBackPressed() {
-        if(mainFragment.onBackPressed()) {
+        if (mainFragment.onBackPressed()) {
             super.onBackPressed();
         }
     }

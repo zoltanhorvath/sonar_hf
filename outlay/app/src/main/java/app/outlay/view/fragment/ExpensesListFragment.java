@@ -13,6 +13,12 @@ import android.widget.TextView;
 
 import com.github.johnkil.print.PrintView;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
 import app.outlay.core.utils.DateUtils;
 import app.outlay.domain.model.Category;
 import app.outlay.domain.model.Expense;
@@ -24,13 +30,6 @@ import app.outlay.view.Navigator;
 import app.outlay.view.adapter.ExpenseAdapter;
 import app.outlay.view.adapter.ListExpensesAdapter;
 import app.outlay.view.fragment.base.BaseMvpFragment;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Inject;
-
 import butterknife.Bind;
 
 /**
@@ -66,7 +65,7 @@ public class ExpensesListFragment extends BaseMvpFragment<ExpensesView, Expenses
     TextView filterDateLabel;
 
     @Inject
-    ExpensesListPresenter presenter;
+    ExpensesListPresenter expensesListPresenter;
 
     private ExpenseAdapter adapter;
     private Date dateFrom;
@@ -77,7 +76,7 @@ public class ExpensesListFragment extends BaseMvpFragment<ExpensesView, Expenses
 
     @Override
     public ExpensesListPresenter createPresenter() {
-        return presenter;
+        return expensesListPresenter;
     }
 
     @Override
@@ -118,7 +117,7 @@ public class ExpensesListFragment extends BaseMvpFragment<ExpensesView, Expenses
 //            adapter = new GridExpensesAdapter();
 //            StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
 //            recyclerView.setLayoutManager(staggeredGridLayoutManager);
-            
+
         adapter = new ListExpensesAdapter();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -129,7 +128,7 @@ public class ExpensesListFragment extends BaseMvpFragment<ExpensesView, Expenses
     @Override
     public void onResume() {
         super.onResume();
-        presenter.findExpenses(dateFrom, dateTo, categoryId);
+        expensesListPresenter.findExpenses(dateFrom, dateTo, categoryId);
     }
 
     private void displayExpenses(List<Expense> expenses) {

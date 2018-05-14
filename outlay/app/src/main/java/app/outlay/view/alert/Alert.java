@@ -24,7 +24,7 @@ public final class Alert {
             bar.setAction(context.getString(app.outlay.R.string.label_undo), clickListener);
             bar.setActionTextColor(ContextCompat.getColor(context, app.outlay.R.color.red));
         }
-        if(callback != null) {
+        if (callback != null) {
             bar.addCallback(callback);
         }
         bar.show();

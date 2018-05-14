@@ -4,7 +4,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -16,20 +15,19 @@ import android.widget.ImageView;
 
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 
-import app.outlay.utils.IconUtils;
-import app.outlay.view.adapter.CategoriesDraggableGridAdapter;
-import app.outlay.domain.model.Category;
-import app.outlay.mvp.presenter.CategoriesPresenter;
-import app.outlay.mvp.view.CategoriesView;
-import app.outlay.view.Navigator;
-import app.outlay.view.fragment.base.BaseMvpFragment;
-import app.outlay.view.helper.itemtouch.OnDragListener;
-import app.outlay.view.helper.itemtouch.SimpleItemTouchHelperCallback;
-
 import java.util.List;
 
 import javax.inject.Inject;
 
+import app.outlay.domain.model.Category;
+import app.outlay.mvp.presenter.CategoriesPresenter;
+import app.outlay.mvp.view.CategoriesView;
+import app.outlay.utils.IconUtils;
+import app.outlay.view.Navigator;
+import app.outlay.view.adapter.CategoriesDraggableGridAdapter;
+import app.outlay.view.fragment.base.BaseMvpFragment;
+import app.outlay.view.helper.itemtouch.OnDragListener;
+import app.outlay.view.helper.itemtouch.SimpleItemTouchHelperCallback;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -54,14 +52,14 @@ public class CategoriesFragment extends BaseMvpFragment<CategoriesView, Categori
     FloatingActionButton fab;
 
     @Inject
-    CategoriesPresenter presenter;
+    CategoriesPresenter categoriesPresenter;
 
     private ItemTouchHelper mItemTouchHelper;
     private CategoriesDraggableGridAdapter adapter;
 
     @Override
     public CategoriesPresenter createPresenter() {
-        return presenter;
+        return categoriesPresenter;
     }
 
     @Override
@@ -114,7 +112,7 @@ public class CategoriesFragment extends BaseMvpFragment<CategoriesView, Categori
     @Override
     public void onResume() {
         super.onResume();
-        presenter.getCategories();
+        categoriesPresenter.getCategories();
     }
 
     @Override
@@ -129,7 +127,7 @@ public class CategoriesFragment extends BaseMvpFragment<CategoriesView, Categori
         for (int i = 0; i < items.size(); i++) {
             items.get(i).setOrder(i);
         }
-        presenter.updateOrder(items);
+        categoriesPresenter.updateOrder(items);
     }
 
     @Override

@@ -5,5 +5,6 @@ package app.outlay.view.progress;
  */
 public interface ProgressLayoutListener {
     void onProgressCompleted();
+
     void onProgressChanged(int seconds);
 }

@@ -1,8 +1,9 @@
 package app.outlay.view.progress;
 
-/**
+/*
  * Created by Bogdan Melnychuk on 1/31/16.
  */
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -34,6 +35,28 @@ public class ProgressLayout extends View implements Animatable {
     private Handler handlerProgress;
 
     private ProgressLayoutListener progressLayoutListener;
+    private final Runnable mRunnableProgress = new Runnable() {
+        @Override
+        public void run() {
+            if (isPlaying) {
+                if (currentProgress == maxProgress) {
+                    if (progressLayoutListener != null) {
+                        progressLayoutListener.onProgressCompleted();
+                    }
+                    currentProgress = 0;
+                    setCurrentProgress(currentProgress);
+                    stop();
+                } else {
+                    postInvalidate();
+                    currentProgress += 1;
+                    if (progressLayoutListener != null) {
+                        progressLayoutListener.onProgressChanged(currentProgress / 10);
+                    }
+                    handlerProgress.postDelayed(mRunnableProgress, PROGRESS_SECOND_MS / 10);
+                }
+            }
+        }
+    };
 
     public ProgressLayout(Context context) {
         this(context, null);
@@ -54,11 +77,13 @@ public class ProgressLayout extends View implements Animatable {
         init(context, attrs);
     }
 
-    @Override public boolean isRunning() {
+    @Override
+    public boolean isRunning() {
         return isPlaying;
     }
 
-    @Override public void start() {
+    @Override
+    public void start() {
         if (isAutoProgress) {
             isPlaying = true;
             handlerProgress.removeCallbacksAndMessages(null);
@@ -66,19 +91,22 @@ public class ProgressLayout extends View implements Animatable {
         }
     }
 
-    @Override public void stop() {
+    @Override
+    public void stop() {
         isPlaying = false;
         handlerProgress.removeCallbacks(mRunnableProgress);
         postInvalidate();
     }
 
-    @Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         mWidth = MeasureSpec.getSize(widthMeasureSpec);
         mHeight = MeasureSpec.getSize(heightMeasureSpec);
     }
 
-    @Override protected void onDraw(Canvas canvas) {
+    @Override
+    protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawRect(0, 0, mWidth, mHeight, paintProgressEmpty);
         canvas.drawRect(0, 0, calculatePositionIndex(currentProgress), mHeight, paintProgressLoaded);
@@ -144,27 +172,5 @@ public class ProgressLayout extends View implements Animatable {
         paintProgressLoaded.setColor(color);
         postInvalidate();
     }
-
-    private final Runnable mRunnableProgress = new Runnable() {
-        @Override public void run() {
-            if (isPlaying) {
-                if (currentProgress == maxProgress) {
-                    if (progressLayoutListener != null) {
-                        progressLayoutListener.onProgressCompleted();
-                    }
-                    currentProgress = 0;
-                    setCurrentProgress(currentProgress);
-                    stop();
-                } else {
-                    postInvalidate();
-                    currentProgress += 1;
-                    if (progressLayoutListener != null) {
-                        progressLayoutListener.onProgressChanged(currentProgress / 10);
-                    }
-                    handlerProgress.postDelayed(mRunnableProgress, PROGRESS_SECOND_MS / 10);
-                }
-            }
-        }
-    };
 
 }

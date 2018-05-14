@@ -21,7 +21,6 @@ import app.outlay.utils.IconUtils;
 import app.outlay.view.helper.AnimationUtils;
 import app.outlay.view.helper.TextWatcherAdapter;
 import app.outlay.view.helper.ViewHelper;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -231,16 +230,16 @@ public class LoginForm extends RelativeLayout {
         return new Point(x, y);
     }
 
+    boolean isEmailValid(CharSequence email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
     public interface OnSubmitClickListener {
         void onSubmit(String email, String password, View src);
     }
 
     public interface OnPasswordForgetClick {
         void onPasswordForget();
-    }
-
-    boolean isEmailValid(CharSequence email) {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     private static class ClearErrorTextWatcher extends TextWatcherAdapter {

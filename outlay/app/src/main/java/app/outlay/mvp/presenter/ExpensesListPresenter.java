@@ -1,14 +1,15 @@
 package app.outlay.mvp.presenter;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
-import app.outlay.core.executor.DefaultSubscriber;
-import app.outlay.domain.interactor.GetExpensesUseCase;
-import app.outlay.domain.model.Report;
-import app.outlay.mvp.view.ExpensesView;
 
 import java.util.Date;
 
 import javax.inject.Inject;
+
+import app.outlay.core.executor.DefaultSubscriber;
+import app.outlay.domain.interactor.GetExpensesUseCase;
+import app.outlay.domain.model.Report;
+import app.outlay.mvp.view.ExpensesView;
 
 /**
  * Created by Bogdan Melnychuk on 1/21/16.
@@ -17,7 +18,7 @@ public class ExpensesListPresenter extends MvpBasePresenter<ExpensesView> {
     private GetExpensesUseCase loadReportUseCase;
 
     @Inject
-    public ExpensesListPresenter(
+    ExpensesListPresenter(
             GetExpensesUseCase loadReportUseCase
     ) {
         this.loadReportUseCase = loadReportUseCase;

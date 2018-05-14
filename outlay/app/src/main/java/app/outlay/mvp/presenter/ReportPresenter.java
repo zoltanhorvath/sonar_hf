@@ -1,16 +1,17 @@
 package app.outlay.mvp.presenter;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
+
+import java.util.Date;
+
+import javax.inject.Inject;
+
 import app.outlay.core.executor.DefaultSubscriber;
 import app.outlay.core.utils.DateUtils;
 import app.outlay.domain.interactor.GetExpensesUseCase;
 import app.outlay.domain.model.Report;
 import app.outlay.mvp.view.StatisticView;
 import app.outlay.view.fragment.ReportFragment;
-
-import java.util.Date;
-
-import javax.inject.Inject;
 
 /**
  * Created by Bogdan Melnychuk on 1/21/16.
@@ -19,7 +20,7 @@ public class ReportPresenter extends MvpBasePresenter<StatisticView> {
     private GetExpensesUseCase loadReportUseCase;
 
     @Inject
-    public ReportPresenter(
+    ReportPresenter(
             GetExpensesUseCase loadReportUseCase
     ) {
         this.loadReportUseCase = loadReportUseCase;

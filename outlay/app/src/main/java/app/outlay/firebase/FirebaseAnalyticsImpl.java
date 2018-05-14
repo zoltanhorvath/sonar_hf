@@ -2,6 +2,7 @@ package app.outlay.firebase;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -181,6 +182,8 @@ public class FirebaseAnalyticsImpl implements Analytics {
             case AppPreferences.THEME_LIGHT:
                 trackEvent("theme_light_used", null);
                 break;
+            default:
+                Log.w("", "Default branch reached");
         }
     }
 

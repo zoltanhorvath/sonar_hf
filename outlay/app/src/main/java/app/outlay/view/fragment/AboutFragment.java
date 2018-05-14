@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import app.outlay.view.fragment.base.StaticContentFragment;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 

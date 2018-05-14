@@ -11,16 +11,51 @@ import android.widget.TextView;
 
 import com.github.johnkil.print.PrintView;
 
-import app.outlay.domain.model.Category;
-import app.outlay.utils.IconUtils;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import app.outlay.domain.model.Category;
+import app.outlay.utils.IconUtils;
 
 public class CategoryAutoCompleteAdapter extends BaseAdapter implements Filterable {
 
     private List<Category> items;
     private List<Category> suggestions;
+    Filter nameFilter = new Filter() {
+        @Override
+        public CharSequence convertResultToString(Object resultValue) {
+            return ((Category) resultValue).getTitle();
+        }
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults filterResults = new FilterResults();
+            if (constraint != null) {
+                suggestions.clear();
+                try {
+                    for (int i = 0; i < items.size(); i++) {
+                        if (items.get(i).getTitle().toLowerCase().startsWith(constraint.toString().toLowerCase())) {
+                            suggestions.add(items.get(i));
+                        }
+                    }
+                } catch (Exception e) {
+
+                }
+                filterResults.values = suggestions;
+                filterResults.count = suggestions.size();
+            }
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            if (results != null && results.count > 0) {
+                notifyDataSetChanged();
+            } else {
+                notifyDataSetInvalidated();
+            }
+        }
+    };
     private LayoutInflater inflater;
 
     public CategoryAutoCompleteAdapter() {
@@ -74,49 +109,13 @@ public class CategoryAutoCompleteAdapter extends BaseAdapter implements Filterab
         return view;
     }
 
-    class ViewHolder {
-        TextView categoryTitle;
-        PrintView categoryIcon;
-    }
-
     @Override
     public Filter getFilter() {
         return nameFilter;
     }
 
-    Filter nameFilter = new Filter() {
-        @Override
-        public CharSequence convertResultToString(Object resultValue) {
-            String str = ((Category) resultValue).getTitle();
-            return str;
-        }
-
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            FilterResults filterResults = new FilterResults();
-            if (constraint != null) {
-                suggestions.clear();
-                try {
-                    for (int i = 0; i < items.size(); i++) {
-                        if (items.get(i).getTitle().toLowerCase().startsWith(constraint.toString().toLowerCase())) {
-                            suggestions.add(items.get(i));
-                        }
-                    }
-                } catch (Exception e) {
-                }
-                filterResults.values = suggestions;
-                filterResults.count = suggestions.size();
-            }
-            return filterResults;
-        }
-
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            if (results != null && results.count > 0) {
-                notifyDataSetChanged();
-            } else {
-                notifyDataSetInvalidated();
-            }
-        }
-    };
+    class ViewHolder {
+        TextView categoryTitle;
+        PrintView categoryIcon;
+    }
 }

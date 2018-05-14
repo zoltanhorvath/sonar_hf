@@ -1,12 +1,12 @@
 package app.outlay.di.module;
 
 import com.google.firebase.auth.FirebaseAuth;
-import app.outlay.domain.repository.AuthService;
-import app.outlay.firebase.FirebaseAuthRxWrapper;
-import app.outlay.firebase.FirebaseAuthService;
 
 import javax.inject.Singleton;
 
+import app.outlay.domain.repository.AuthService;
+import app.outlay.firebase.FirebaseAuthRxWrapper;
+import app.outlay.firebase.FirebaseAuthService;
 import dagger.Module;
 import dagger.Provides;
 

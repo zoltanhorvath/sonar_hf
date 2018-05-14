@@ -19,7 +19,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.math.BigDecimal;
@@ -40,7 +39,6 @@ import app.outlay.mvp.view.EnterExpenseView;
 import app.outlay.view.Navigator;
 import app.outlay.view.activity.base.DrawerActivity;
 import app.outlay.view.adapter.CategoriesGridAdapter;
-import app.outlay.view.adapter.ExpenseAdapter;
 import app.outlay.view.alert.Alert;
 import app.outlay.view.dialog.DatePickerFragment;
 import app.outlay.view.fragment.base.BaseMvpFragment;
@@ -83,7 +81,7 @@ public class MainFragment extends BaseMvpFragment<EnterExpenseView, EnterExpense
     Toolbar bottomSheetToolbar;
 
     @Inject
-    EnterExpensePresenter presenter;
+    EnterExpensePresenter enterExpensePresenter;
 
     @Inject
     User currentUser;
@@ -111,7 +109,7 @@ public class MainFragment extends BaseMvpFragment<EnterExpenseView, EnterExpense
 
     @Override
     public EnterExpensePresenter createPresenter() {
-        return presenter;
+        return enterExpensePresenter;
     }
 
     @Override
@@ -119,7 +117,7 @@ public class MainFragment extends BaseMvpFragment<EnterExpenseView, EnterExpense
         super.onCreate(savedInstanceState);
         getApp().getUserComponent().inject(this);
 
-        if(appPreferences().showWhatsNew()) {
+        if (appPreferences().showWhatsNew()) {
             new MaterialDialog.Builder(getActivity())
                     .backgroundColor(getOutlayTheme().backgroundColor)
                     .negativeText(R.string.label_ok)
@@ -132,9 +130,9 @@ public class MainFragment extends BaseMvpFragment<EnterExpenseView, EnterExpense
     @Override
     public void onResume() {
         super.onResume();
-        presenter.getCategories();
+        enterExpensePresenter.getCategories();
         if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-            presenter.loadTimeline();
+            enterExpensePresenter.loadTimeline();
         }
         cleanAmountInput();
     }
@@ -180,10 +178,10 @@ public class MainFragment extends BaseMvpFragment<EnterExpenseView, EnterExpense
                 e.setAmount(new BigDecimal(amountText.getText().toString()));
                 e.setReportedWhen(selectedDate);
                 analytics().trackExpenseCreated(e);
-                if(!TextUtils.isEmpty(e.getNote())) {
+                if (!TextUtils.isEmpty(e.getNote())) {
                     analytics().trackNoteEntered();
                 }
-                presenter.createExpense(e);
+                enterExpensePresenter.createExpense(e);
                 cleanAmountInput();
             } else {
                 validator.onInvalidInput(amountText.getText().toString());
@@ -207,7 +205,7 @@ public class MainFragment extends BaseMvpFragment<EnterExpenseView, EnterExpense
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {
                     analytics().trackViewTimeline();
-                    presenter.loadTimeline();
+                    enterExpensePresenter.loadTimeline();
                 }
             }
 
@@ -271,7 +269,7 @@ public class MainFragment extends BaseMvpFragment<EnterExpenseView, EnterExpense
         message = String.format(message, expense.getAmount(), expense.getCategory().getTitle());
         Alert.info(getBaseActivity().getRootView(), message,
                 v -> {
-                    presenter.deleteExpense(expense);
+                    enterExpensePresenter.deleteExpense(expense);
                     amountText.setText(NumberUtils.formatAmount(expense.getAmount()));
                     expenseNote.setText(expense.getNote());
                 }

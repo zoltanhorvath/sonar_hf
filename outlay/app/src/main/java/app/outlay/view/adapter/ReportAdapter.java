@@ -19,16 +19,15 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+
 import app.outlay.core.utils.NumberUtils;
 import app.outlay.domain.model.Category;
 import app.outlay.domain.model.Report;
 import app.outlay.utils.IconUtils;
 import app.outlay.view.model.CategorizedExpenses;
 import app.outlay.view.progress.ProgressLayout;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -48,12 +47,12 @@ public class ReportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         maxProgress = getMaxProgress();
     }
 
-    public void setOnItemClickListener(ItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
-    }
-
     public ReportAdapter() {
         this(new CategorizedExpenses());
+    }
+
+    public void setOnItemClickListener(ItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 
     public void setItems(CategorizedExpenses categorizedExpenses) {
@@ -150,6 +149,49 @@ public class ReportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return categorizedExpenses == null ? 1 : categorizedExpenses.getCategoriesSize() + 1;
     }
 
+    private void updateChartData(PieChart chart) {
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        ArrayList<Integer> colors = new ArrayList<>();
+
+        double sum = 0;
+        for (int i = 0; i < categorizedExpenses.getCategories().size(); i++) {
+            Category c = categorizedExpenses.getCategory(i);
+            Report r = categorizedExpenses.getReport(c);
+            sum += r.getTotalAmount().doubleValue();
+            entries.add(new PieEntry((int) (r.getTotalAmount().doubleValue() * 1000), c.getTitle()));
+            colors.add(c.getColor());
+        }
+
+        PieDataSet dataSet = new PieDataSet(entries, "Outlay");
+        dataSet.setSliceSpace(2f);
+        dataSet.setSelectionShift(10f);
+        dataSet.setColors(colors);
+
+        PieData data = new PieData(dataSet);
+        data.setValueFormatter((value, entry, dataSetIndex, viewPortHandler) -> NumberUtils.formatAmount((double) value / 1000));
+        data.setValueTextSize(11f);
+        data.setValueTextColor(Color.WHITE);
+        chart.setData(data);
+        chart.setCenterText(NumberUtils.formatAmount(sum));
+        chart.highlightValues(null);
+        chart.invalidate();
+    }
+
+    private double getMaxProgress() {
+        double max = -1;
+        for (Category c : categorizedExpenses.getCategories()) {
+            Report r = categorizedExpenses.getReport(c);
+            if (max < r.getTotalAmount().doubleValue()) {
+                max = r.getTotalAmount().doubleValue();
+            }
+        }
+        return max;
+    }
+
+    public interface ItemClickListener {
+        void onItemClicked(Category category, Report report);
+    }
+
     public class ReportViewHolder extends RecyclerView.ViewHolder {
         @Bind(app.outlay.R.id.amount)
         TextView amountText;
@@ -198,48 +240,5 @@ public class ReportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             chart.setCenterTextColor(Color.WHITE);
             chart.setCenterTextSize(16);
         }
-    }
-
-    private void updateChartData(PieChart chart) {
-        ArrayList<PieEntry> entries = new ArrayList<>();
-        ArrayList<Integer> colors = new ArrayList<>();
-
-        double sum = 0;
-        for (int i = 0; i < categorizedExpenses.getCategories().size(); i++) {
-            Category c = categorizedExpenses.getCategory(i);
-            Report r = categorizedExpenses.getReport(c);
-            sum += r.getTotalAmount().doubleValue();
-            entries.add(new PieEntry((int) (r.getTotalAmount().doubleValue() * 1000), c.getTitle()));
-            colors.add(c.getColor());
-        }
-
-        PieDataSet dataSet = new PieDataSet(entries, "Outlay");
-        dataSet.setSliceSpace(2f);
-        dataSet.setSelectionShift(10f);
-        dataSet.setColors(colors);
-
-        PieData data = new PieData(dataSet);
-        data.setValueFormatter((value, entry, dataSetIndex, viewPortHandler) -> NumberUtils.formatAmount((double) value / 1000));
-        data.setValueTextSize(11f);
-        data.setValueTextColor(Color.WHITE);
-        chart.setData(data);
-        chart.setCenterText(NumberUtils.formatAmount(sum));
-        chart.highlightValues(null);
-        chart.invalidate();
-    }
-
-    private double getMaxProgress() {
-        double max = -1;
-        for (Category c : categorizedExpenses.getCategories()) {
-            Report r = categorizedExpenses.getReport(c);
-            if (max < r.getTotalAmount().doubleValue()) {
-                max = r.getTotalAmount().doubleValue();
-            }
-        }
-        return max;
-    }
-
-    public interface ItemClickListener {
-        void onItemClicked(Category category, Report report);
     }
 }

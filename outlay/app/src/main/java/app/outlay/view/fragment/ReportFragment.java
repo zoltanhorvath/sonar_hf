@@ -13,6 +13,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Calendar;
+import java.util.Date;
+
+import javax.inject.Inject;
+
 import app.outlay.core.utils.DateUtils;
 import app.outlay.domain.model.Report;
 import app.outlay.mvp.presenter.ReportPresenter;
@@ -23,12 +28,6 @@ import app.outlay.view.dialog.DatePickerFragment;
 import app.outlay.view.fragment.base.BaseMvpFragment;
 import app.outlay.view.helper.OnTabSelectedListenerAdapter;
 import app.outlay.view.model.CategorizedExpenses;
-
-import java.util.Calendar;
-import java.util.Date;
-
-import javax.inject.Inject;
-
 import butterknife.Bind;
 
 /**
@@ -54,7 +53,7 @@ public class ReportFragment extends BaseMvpFragment<StatisticView, ReportPresent
     View noResults;
 
     @Inject
-    ReportPresenter presenter;
+    ReportPresenter reportPresenter;
 
     private int selectedPeriod;
     private Date selectedDate;
@@ -62,7 +61,7 @@ public class ReportFragment extends BaseMvpFragment<StatisticView, ReportPresent
 
     @Override
     public ReportPresenter createPresenter() {
-        return presenter;
+        return reportPresenter;
     }
 
     @Override
@@ -75,8 +74,7 @@ public class ReportFragment extends BaseMvpFragment<StatisticView, ReportPresent
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(app.outlay.R.layout.fragment_report, null, false);
-        return view;
+        return inflater.inflate(app.outlay.R.layout.fragment_report, null, false);
     }
 
     @Override
@@ -104,7 +102,7 @@ public class ReportFragment extends BaseMvpFragment<StatisticView, ReportPresent
                     selectedDate = selected;
                     ReportFragment.this.setTitle(DateUtils.toShortString(selected));
                     updateTitle();
-                    presenter.getExpenses(selectedDate, selectedPeriod);
+                    reportPresenter.getExpenses(selectedDate, selectedPeriod);
                 });
                 datePickerFragment.show(getChildFragmentManager(), "datePicker");
                 break;
@@ -145,14 +143,14 @@ public class ReportFragment extends BaseMvpFragment<StatisticView, ReportPresent
                         break;
                 }
                 updateTitle();
-                presenter.getExpenses(selectedDate, selectedPeriod);
+                reportPresenter.getExpenses(selectedDate, selectedPeriod);
             }
         });
 
         recyclerView.setLayoutManager(layoutManager);
         adapter = new ReportAdapter();
         recyclerView.setAdapter(adapter);
-        presenter.getExpenses(selectedDate, selectedPeriod);
+        reportPresenter.getExpenses(selectedDate, selectedPeriod);
 
         adapter.setOnItemClickListener((category, report) -> goToExpensesList(selectedDate, selectedPeriod, category.getId()));
     }

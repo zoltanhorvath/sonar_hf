@@ -2,6 +2,7 @@ package app.outlay.di.module;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
 import app.outlay.data.repository.CategoryRepositoryImpl;
 import app.outlay.data.repository.ExpenseRepositoryImpl;
 import app.outlay.data.source.CategoryDataSource;
@@ -12,7 +13,6 @@ import app.outlay.domain.repository.CategoryRepository;
 import app.outlay.domain.repository.ExpenseRepository;
 import app.outlay.firebase.CategoryFirebaseSource;
 import app.outlay.firebase.ExpenseFirebaseSource;
-
 import dagger.Module;
 import dagger.Provides;
 

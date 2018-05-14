@@ -5,7 +5,6 @@ import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import org.joda.time.LocalDate;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -81,16 +80,13 @@ public class EnterExpensePresenter extends MvpBasePresenter<EnterExpenseView> {
         getExpensesUseCase.execute(input, new DefaultSubscriber<Report>() {
             @Override
             public void onNext(Report report) {
-                Collections.sort(report.getExpenses(), new Comparator<Expense>() {
-                    @Override
-                    public int compare(Expense e1, Expense e2) {
-                        if (e1.getReportedWhen().getTime() > e2.getReportedWhen().getTime()) {
-                            return -1;
-                        } else if (e1.getReportedWhen().getTime() < e2.getReportedWhen().getTime()) {
-                            return 1;
-                        } else {
-                            return 0;
-                        }
+                Collections.sort(report.getExpenses(), (e1, e2) -> {
+                    if (e1.getReportedWhen().getTime() > e2.getReportedWhen().getTime()) {
+                        return -1;
+                    } else if (e1.getReportedWhen().getTime() < e2.getReportedWhen().getTime()) {
+                        return 1;
+                    } else {
+                        return 0;
                     }
                 });
                 getView().showTimeline(report.getExpenses());

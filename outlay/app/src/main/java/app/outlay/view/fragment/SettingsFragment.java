@@ -34,11 +34,11 @@ public class SettingsFragment extends BaseMvpFragment<SettingsView, SettingsPres
     TextView themeName;
 
     @Inject
-    SettingsPresenter presenter;
+    SettingsPresenter settingsPresenter;
 
     @Override
     public SettingsPresenter createPresenter() {
-        return presenter;
+        return settingsPresenter;
     }
 
     @Override

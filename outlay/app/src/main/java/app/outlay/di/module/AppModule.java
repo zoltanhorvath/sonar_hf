@@ -34,6 +34,15 @@ public class AppModule {
         this.context = mApplication;
     }
 
+    private static Category category(String title, String icon, int color, int order) {
+        Category c = new Category();
+        c.setTitle(title);
+        c.setIcon(icon);
+        c.setColor(color);
+        c.setOrder(order);
+        return c;
+    }
+
     @Provides
     @Singleton
     Context provideAppContext() {
@@ -83,14 +92,5 @@ public class AppModule {
     @Singleton
     Gson providerGson() {
         return new GsonBuilder().create();
-    }
-
-    private static Category category(String title, String icon, int color, int order) {
-        Category c = new Category();
-        c.setTitle(title);
-        c.setIcon(icon);
-        c.setColor(color);
-        c.setOrder(order);
-        return c;
     }
 }

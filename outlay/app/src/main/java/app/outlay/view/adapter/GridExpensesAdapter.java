@@ -12,7 +12,6 @@ import app.outlay.core.utils.DateUtils;
 import app.outlay.core.utils.NumberUtils;
 import app.outlay.domain.model.Expense;
 import app.outlay.utils.IconUtils;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 

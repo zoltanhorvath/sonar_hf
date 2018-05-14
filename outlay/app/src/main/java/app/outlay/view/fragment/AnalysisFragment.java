@@ -71,7 +71,7 @@ public class AnalysisFragment extends BaseMvpFragment<AnalysisView, AnalysisPres
     EditText endDateEdit;
 
     @Inject
-    AnalysisPresenter presenter;
+    AnalysisPresenter analysisPresenter;
 
     private CategoryAutoCompleteAdapter autoCompleteAdapter;
     private DayAxisValueFormatter dayAxisValueFormatter;
@@ -82,7 +82,7 @@ public class AnalysisFragment extends BaseMvpFragment<AnalysisView, AnalysisPres
 
     @Override
     public AnalysisPresenter createPresenter() {
-        return presenter;
+        return analysisPresenter;
     }
 
     @Override

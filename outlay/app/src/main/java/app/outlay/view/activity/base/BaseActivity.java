@@ -15,10 +15,16 @@ import app.outlay.view.OutlayTheme;
 
 public interface BaseActivity {
     App getApp();
+
     View getRootView();
+
     OutlayTheme getOutlayTheme();
+
     AppComponent getApplicationComponent();
+
     Analytics analytics();
+
     ResourceHelper getResourceHelper();
+
     AppPreferences appPreferences();
 }

@@ -15,7 +15,6 @@ import app.outlay.core.utils.NumberUtils;
 import app.outlay.domain.model.Category;
 import app.outlay.domain.model.Expense;
 import app.outlay.utils.IconUtils;
-
 import app.outlay.utils.ResourceHelper;
 import butterknife.Bind;
 import butterknife.ButterKnife;

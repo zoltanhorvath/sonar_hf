@@ -1,9 +1,9 @@
 package app.outlay.analytics;
 
+import java.util.Date;
+
 import app.outlay.domain.model.Category;
 import app.outlay.domain.model.Expense;
-
-import java.util.Date;
 
 /**
  * Created by bmelnychuk on 2/11/17.

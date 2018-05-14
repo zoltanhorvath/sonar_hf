@@ -6,17 +6,17 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import app.outlay.data.source.CategoryDataSource;
-import app.outlay.domain.model.Category;
-import app.outlay.domain.model.User;
-import app.outlay.firebase.dto.CategoryDto;
-import app.outlay.firebase.dto.adapter.CategoryAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import app.outlay.data.source.CategoryDataSource;
+import app.outlay.domain.model.Category;
+import app.outlay.domain.model.User;
+import app.outlay.firebase.dto.CategoryDto;
+import app.outlay.firebase.dto.adapter.CategoryAdapter;
 import rx.Observable;
 
 /**
@@ -24,6 +24,8 @@ import rx.Observable;
  */
 
 public class CategoryFirebaseSource implements CategoryDataSource {
+    private static final String USERS = "users";
+    private static final String CATEGORIES = "categories";
     private DatabaseReference mDatabase;
     private CategoryAdapter adapter;
     private User currentUser;
@@ -39,28 +41,24 @@ public class CategoryFirebaseSource implements CategoryDataSource {
 
     @Override
     public Observable<List<Category>> getAll() {
-        return Observable.create(subscriber -> {
-            mDatabase.child("users").child(currentUser.getId()).child("categories").orderByChild("order")
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            List<Category> categories = new ArrayList<>();
-                            for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                CategoryDto categoryDto = postSnapshot.getValue(CategoryDto.class);
-                                categories.add(adapter.toCategory(categoryDto));
-                            }
-                            subscriber.onNext(categories);
-                            subscriber.onCompleted();
+        return Observable.create(subscriber -> mDatabase.child(USERS).child(currentUser.getId()).child(CATEGORIES).orderByChild("order")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        List<Category> categories = new ArrayList<>();
+                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                            CategoryDto categoryDto = postSnapshot.getValue(CategoryDto.class);
+                            categories.add(adapter.toCategory(categoryDto));
                         }
+                        subscriber.onNext(categories);
+                        subscriber.onCompleted();
+                    }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            subscriber.onError(databaseError.toException());
-                        }
-                    });
-        });
-
-
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        subscriber.onError(databaseError.toException());
+                    }
+                }));
     }
 
     @Override
@@ -68,23 +66,21 @@ public class CategoryFirebaseSource implements CategoryDataSource {
         return getDtoById(id).map(categoryDto -> adapter.toCategory(categoryDto));
     }
 
-    protected Observable<CategoryDto> getDtoById(String id) {
-        return Observable.create(subscriber -> {
-            mDatabase.child("users").child(currentUser.getId()).child("categories").child(id)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            CategoryDto categoryDto = dataSnapshot.getValue(CategoryDto.class);
-                            subscriber.onNext(categoryDto);
-                            subscriber.onCompleted();
-                        }
+    private Observable<CategoryDto> getDtoById(String id) {
+        return Observable.create(subscriber -> mDatabase.child(USERS).child(currentUser.getId()).child(CATEGORIES).child(id)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        CategoryDto categoryDto = dataSnapshot.getValue(CategoryDto.class);
+                        subscriber.onNext(categoryDto);
+                        subscriber.onCompleted();
+                    }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            subscriber.onError(databaseError.toException());
-                        }
-                    });
-        });
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        subscriber.onError(databaseError.toException());
+                    }
+                }));
     }
 
     @Override
@@ -95,7 +91,7 @@ public class CategoryFirebaseSource implements CategoryDataSource {
                 childUpdates.put(c.getId() + "/order", c.getOrder());
             }
 
-            DatabaseReference categoriesRef = mDatabase.child("users").child(currentUser.getId()).child("categories");
+            DatabaseReference categoriesRef = mDatabase.child(USERS).child(currentUser.getId()).child(CATEGORIES);
             categoriesRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -117,7 +113,7 @@ public class CategoryFirebaseSource implements CategoryDataSource {
         Observable<Category> saveCategory = Observable.create(subscriber -> {
             String key = category.getId();
             if (TextUtils.isEmpty(key)) {
-                key = mDatabase.child("users").child(currentUser.getId()).child("categories").push().getKey();
+                key = mDatabase.child(USERS).child(currentUser.getId()).child(CATEGORIES).push().getKey();
                 category.setId(key);
             }
 
@@ -130,9 +126,9 @@ public class CategoryFirebaseSource implements CategoryDataSource {
             childUpdates.put("order", category.getOrder());
 
             DatabaseReference dbRef = mDatabase
-                    .child("users")
+                    .child(USERS)
                     .child(currentUser.getId())
-                    .child("categories").child(key);
+                    .child(CATEGORIES).child(key);
 
             dbRef.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -157,9 +153,9 @@ public class CategoryFirebaseSource implements CategoryDataSource {
 
     @Override
     public Observable<Category> remove(Category category) {
-        final Observable<Category> deleteCategory = Observable.create(subscriber -> {
-            DatabaseReference catReference = mDatabase.child("users").child(currentUser.getId())
-                    .child("categories").child(category.getId());
+        return Observable.create(subscriber -> {
+            DatabaseReference catReference = mDatabase.child(USERS).child(currentUser.getId())
+                    .child(CATEGORIES).child(category.getId());
             catReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -174,7 +170,5 @@ public class CategoryFirebaseSource implements CategoryDataSource {
             });
             catReference.removeValue();
         });
-
-        return deleteCategory;
     }
 }

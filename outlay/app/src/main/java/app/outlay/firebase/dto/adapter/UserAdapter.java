@@ -1,6 +1,7 @@
 package app.outlay.firebase.dto.adapter;
 
 import com.google.firebase.auth.FirebaseUser;
+
 import app.outlay.domain.model.User;
 
 /**
@@ -15,5 +16,8 @@ public class UserAdapter {
         result.setId(fbUser.getUid());
         result.setEmail(fbUser.getEmail());
         return result;
+    }
+
+    private UserAdapter() {
     }
 }

@@ -14,9 +14,9 @@ import app.outlay.view.OutlayTheme;
  */
 
 public class ResourceHelper {
+    private static final String TAG = "ResourceHelper";
     private Activity context;
     private OutlayTheme theme;
-    private static final String TAG = "ResourceHelper";
 
     public ResourceHelper(
             OutlayTheme theme,
@@ -24,6 +24,15 @@ public class ResourceHelper {
     ) {
         this.theme = theme;
         this.context = context;
+    }
+
+    public static int getIntegerResource(Context context, String stringResName) {
+        try {
+            return context.getResources().getIdentifier(stringResName, "integer", context.getPackageName());
+        } catch (Exception e) {
+            Log.e(TAG, "Resource not found: stringResName = " + stringResName, e);
+            return -1;
+        }
     }
 
     public Drawable getMaterialToolbarIcon(int iconResId) {
@@ -68,14 +77,5 @@ public class ResourceHelper {
 
     public int getIntegerResource(String stringResName) {
         return getResourceId(stringResName, "integer");
-    }
-
-    public static int getIntegerResource(Context context, String stringResName) {
-        try {
-            return context.getResources().getIdentifier(stringResName, "integer", context.getPackageName());
-        } catch (Exception e) {
-            Log.e(TAG, "Resource not found: stringResName = " + stringResName, e);
-            return -1;
-        }
     }
 }

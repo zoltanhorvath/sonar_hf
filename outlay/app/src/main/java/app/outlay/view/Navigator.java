@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 
+import java.util.Date;
+
 import app.outlay.domain.model.Expense;
 import app.outlay.view.activity.LoginActivity;
 import app.outlay.view.activity.MainActivity;
@@ -16,8 +18,6 @@ import app.outlay.view.fragment.CategoryDetailsFragment;
 import app.outlay.view.fragment.ExpensesDetailsFragment;
 import app.outlay.view.fragment.ExpensesListFragment;
 import app.outlay.view.fragment.ReportFragment;
-
-import java.util.Date;
 
 /**
  * Created by Bogdan Melnychuk on 1/24/16.

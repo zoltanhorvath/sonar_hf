@@ -1,6 +1,7 @@
 package app.outlay.mvp.view;
 
 import com.hannesdorfmann.mosby.mvp.MvpView;
+
 import app.outlay.domain.model.Category;
 
 /**
@@ -9,5 +10,6 @@ import app.outlay.domain.model.Category;
 
 public interface CategoryDetailsView extends MvpView {
     void showCategory(Category category);
+
     void finish();
 }

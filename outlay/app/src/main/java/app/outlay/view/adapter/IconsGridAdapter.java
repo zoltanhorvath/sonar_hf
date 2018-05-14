@@ -8,10 +8,9 @@ import android.view.ViewGroup;
 
 import com.github.johnkil.print.PrintView;
 
-import app.outlay.utils.IconUtils;
-
 import java.util.List;
 
+import app.outlay.utils.IconUtils;
 import app.outlay.view.OutlayTheme;
 import butterknife.Bind;
 import butterknife.ButterKnife;

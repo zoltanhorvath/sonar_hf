@@ -10,7 +10,6 @@ import app.outlay.view.fragment.ExpensesDetailsFragment;
 import app.outlay.view.fragment.ExpensesListFragment;
 import app.outlay.view.fragment.MainFragment;
 import app.outlay.view.fragment.ReportFragment;
-
 import app.outlay.view.fragment.SettingsFragment;
 import dagger.Subcomponent;
 

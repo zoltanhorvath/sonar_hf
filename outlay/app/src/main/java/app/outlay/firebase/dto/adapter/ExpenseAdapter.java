@@ -1,11 +1,11 @@
 package app.outlay.firebase.dto.adapter;
 
-import app.outlay.firebase.dto.ExpenseDto;
-import app.outlay.domain.model.Category;
-import app.outlay.domain.model.Expense;
-
 import java.math.BigDecimal;
 import java.util.Date;
+
+import app.outlay.domain.model.Category;
+import app.outlay.domain.model.Expense;
+import app.outlay.firebase.dto.ExpenseDto;
 
 /**
  * Created by bmelnychuk on 10/26/16.

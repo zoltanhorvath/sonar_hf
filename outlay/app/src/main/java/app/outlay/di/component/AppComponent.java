@@ -2,18 +2,17 @@ package app.outlay.di.component;
 
 import android.content.Context;
 
+import javax.inject.Singleton;
+
 import app.outlay.analytics.Analytics;
 import app.outlay.di.module.AppModule;
 import app.outlay.di.module.FirebaseModule;
 import app.outlay.di.module.UserModule;
 import app.outlay.impl.AppPreferences;
-import app.outlay.view.activity.base.ParentActivity;
 import app.outlay.view.activity.LoginActivity;
+import app.outlay.view.activity.base.ParentActivity;
 import app.outlay.view.fragment.LoginFragment;
 import app.outlay.view.fragment.SyncGuestFragment;
-
-import javax.inject.Singleton;
-
 import dagger.Component;
 
 /**

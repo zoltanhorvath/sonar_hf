@@ -50,7 +50,7 @@ public final class AnimationUtils {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void showWithReveal(View view, Point point) {
-        if(DeviceUtils.supportV5()) {
+        if (DeviceUtils.supportV5()) {
             view.setVisibility(View.VISIBLE);
 
             // get the final radius for the clipping circle
@@ -76,7 +76,7 @@ public final class AnimationUtils {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void hideWithReveal(View view, Point point) {
-        if(DeviceUtils.supportV5()) {
+        if (DeviceUtils.supportV5()) {
             // get the initial radius for the clipping circle
             int initialRadius = (int) Math.hypot(view.getWidth(), view.getHeight());
 
@@ -102,16 +102,13 @@ public final class AnimationUtils {
 
     private static ValueAnimator slideAnimator(int start, int end, final View summary) {
         ValueAnimator animator = ValueAnimator.ofInt(start, end);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                //Update Height
-                int value = (Integer) valueAnimator.getAnimatedValue();
+        animator.addUpdateListener(valueAnimator -> {
+            //Update Height
+            int value = (Integer) valueAnimator.getAnimatedValue();
 
-                ViewGroup.LayoutParams layoutParams = summary.getLayoutParams();
-                layoutParams.height = value;
-                summary.setLayoutParams(layoutParams);
-            }
+            ViewGroup.LayoutParams layoutParams = summary.getLayoutParams();
+            layoutParams.height = value;
+            summary.setLayoutParams(layoutParams);
         });
         return animator;
     }
