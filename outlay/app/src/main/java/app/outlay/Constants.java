@@ -5,5 +5,5 @@ package app.outlay;
  */
 public class Constants {
     public static final String CONTACT_EMAIL = "melnychuk.bogdan@gmail.com";
-
+    private Constants(){}
 }
