@@ -8,6 +8,8 @@ import org.joda.time.LocalTime;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Bogdan Melnychuk on 1/29/16.
@@ -17,6 +19,11 @@ public final class DateUtils {
     private static final SimpleDateFormat SHORT_STRING_FORMAT = new SimpleDateFormat("dd MMM yy");
     private static final SimpleDateFormat YEAR_MONTH_STRING_FORMAT = new SimpleDateFormat("yyyyMM");
     private static final SimpleDateFormat LONG_STRING_FORMAT = new SimpleDateFormat("dd MMMM yyyy");
+
+    public static final int PERIOD_DAY = 0;
+    public static final int PERIOD_WEEK = 1;
+    public static final int PERIOD_MONTH = 2;
+
 
     public static String toYearMonthString(Date date) {
         return YEAR_MONTH_STRING_FORMAT.format(date);
@@ -109,5 +116,28 @@ public final class DateUtils {
 
     public static Date getMax(Date date1, Date date2) {
         return new DateTime(date1).isAfter(new DateTime(date2)) ? date1 : date2;
+    }
+
+    public static Map<String, Date> getDates(Date date, int selectedPeriod) {
+        Date startDate = date;
+        Date endDate = date;
+        switch (selectedPeriod) {
+            case PERIOD_DAY:
+                startDate = DateUtils.getDayStart(date);
+                endDate = DateUtils.getDayEnd(date);
+                break;
+            case PERIOD_WEEK:
+                startDate = DateUtils.getWeekStart(date);
+                endDate = DateUtils.getWeekEnd(date);
+                break;
+            case PERIOD_MONTH:
+                startDate = DateUtils.getMonthStart(date);
+                endDate = DateUtils.getMonthEnd(date);
+                break;
+        }
+        Map<String, Date> dates = new HashMap<>();
+        dates.put("start", startDate);
+        dates.put("end", endDate);
+        return dates;
     }
 }
