@@ -15,11 +15,14 @@ import android.view.ViewGroup;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 
 import javax.inject.Inject;
 
+import app.outlay.Constants;
 import app.outlay.core.utils.DateUtils;
 import app.outlay.domain.model.Report;
+import app.outlay.impl.AndroidLogger;
 import app.outlay.mvp.presenter.ReportPresenter;
 import app.outlay.mvp.view.StatisticView;
 import app.outlay.view.Navigator;
@@ -36,9 +39,6 @@ import butterknife.Bind;
 public class ReportFragment extends BaseMvpFragment<StatisticView, ReportPresenter> implements StatisticView {
     public static final String ARG_DATE = "_argDate";
 
-    public static final int PERIOD_DAY = 0;
-    public static final int PERIOD_WEEK = 1;
-    public static final int PERIOD_MONTH = 2;
 
     @Bind(app.outlay.R.id.recyclerView)
     RecyclerView recyclerView;
@@ -58,6 +58,7 @@ public class ReportFragment extends BaseMvpFragment<StatisticView, ReportPresent
     private int selectedPeriod;
     private Date selectedDate;
     private ReportAdapter adapter;
+    private AndroidLogger androidLogger = new AndroidLogger();
 
     @Override
     public ReportPresenter createPresenter() {
@@ -109,6 +110,9 @@ public class ReportFragment extends BaseMvpFragment<StatisticView, ReportPresent
             case app.outlay.R.id.action_list:
                 analytics().trackViewExpensesList();
                 goToExpensesList(selectedDate, selectedPeriod);
+                break;
+            default:
+                androidLogger.warn(Constants.DEFAULT_BRANCH_REACHED);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -132,15 +136,17 @@ public class ReportFragment extends BaseMvpFragment<StatisticView, ReportPresent
             public void onTabSelected(TabLayout.Tab tab) {
                 selectedPeriod = tab.getPosition();
                 switch (selectedPeriod) {
-                    case ReportFragment.PERIOD_DAY:
+                    case DateUtils.PERIOD_DAY:
                         analytics().trackViewDailyExpenses();
                         break;
-                    case ReportFragment.PERIOD_WEEK:
+                    case DateUtils.PERIOD_WEEK:
                         analytics().trackViewWeeklyExpenses();
                         break;
-                    case ReportFragment.PERIOD_MONTH:
+                    case DateUtils.PERIOD_MONTH:
                         analytics().trackViewMonthlyExpenses();
                         break;
+                    default:
+                        androidLogger.warn(Constants.DEFAULT_BRANCH_REACHED);
                 }
                 updateTitle();
                 reportPresenter.getExpenses(selectedDate, selectedPeriod);
@@ -167,19 +173,21 @@ public class ReportFragment extends BaseMvpFragment<StatisticView, ReportPresent
 
     private void updateTitle() {
         switch (selectedPeriod) {
-            case PERIOD_DAY:
+            case DateUtils.PERIOD_DAY:
                 setTitle(DateUtils.toShortString(selectedDate));
                 break;
-            case PERIOD_WEEK:
+            case DateUtils.PERIOD_WEEK:
                 Date startDate = DateUtils.getWeekStart(selectedDate);
                 Date endDate = DateUtils.getWeekEnd(selectedDate);
                 setTitle(DateUtils.toShortString(startDate) + " - " + DateUtils.toShortString(endDate));
                 break;
-            case PERIOD_MONTH:
+            case DateUtils.PERIOD_MONTH:
                 startDate = DateUtils.getMonthStart(selectedDate);
                 endDate = DateUtils.getMonthEnd(selectedDate);
                 setTitle(DateUtils.toShortString(startDate) + " - " + DateUtils.toShortString(endDate));
                 break;
+            default:
+                androidLogger.warn(Constants.DEFAULT_BRANCH_REACHED);
         }
     }
 
@@ -189,23 +197,9 @@ public class ReportFragment extends BaseMvpFragment<StatisticView, ReportPresent
 
     public void goToExpensesList(Date date, int selectedPeriod, String category) {
         date = DateUtils.fillCurrentTime(date);
-        Date startDate = date;
-        Date endDate = date;
-
-        switch (selectedPeriod) {
-            case ReportFragment.PERIOD_DAY:
-                startDate = DateUtils.getDayStart(date);
-                endDate = DateUtils.getDayEnd(date);
-                break;
-            case ReportFragment.PERIOD_WEEK:
-                startDate = DateUtils.getWeekStart(date);
-                endDate = DateUtils.getWeekEnd(date);
-                break;
-            case ReportFragment.PERIOD_MONTH:
-                startDate = DateUtils.getMonthStart(date);
-                endDate = DateUtils.getMonthEnd(date);
-                break;
-        }
+        Map<String, Date> dates = DateUtils.getDates(date, selectedPeriod);
+        Date startDate = dates.get("start");
+        Date endDate = dates.get("end");
         Navigator.goToExpensesList(getActivity(), startDate, endDate, category);
     }
 }

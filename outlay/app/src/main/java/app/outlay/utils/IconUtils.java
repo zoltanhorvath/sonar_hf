@@ -88,6 +88,9 @@ public final class IconUtils {
             "ic_ducks"
     };
 
+    private IconUtils() {
+    }
+
     public static List<String> getAll() {
         return Arrays.asList(all);
     }

@@ -5,6 +5,7 @@ package app.outlay;
  */
 public class Constants {
     public static final String CONTACT_EMAIL = "melnychuk.bogdan@gmail.com";
+    public static final String DEFAULT_BRANCH_REACHED = "Default branch reached.";
 
     private Constants() {
     }

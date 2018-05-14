@@ -1,6 +1,5 @@
 package app.outlay.view.adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,13 +61,11 @@ public class IconsGridAdapter extends RecyclerView.Adapter<IconsGridAdapter.Cate
     public CategoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         final View v = inflater.inflate(app.outlay.R.layout.item_icon, parent, false);
-        final CategoryViewHolder viewHolder = new CategoryViewHolder(v);
-        return viewHolder;
+        return new CategoryViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(CategoryViewHolder holder, int position) {
-        Context context = holder.categoryContainer.getContext();
         String currentOne = items.get(position);
 
         IconUtils.loadCategoryIcon(currentOne, holder.categoryIcon);

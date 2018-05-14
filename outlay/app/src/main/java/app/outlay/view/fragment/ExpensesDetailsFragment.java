@@ -26,10 +26,12 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import app.outlay.Constants;
 import app.outlay.core.utils.DateUtils;
 import app.outlay.core.utils.NumberUtils;
 import app.outlay.domain.model.Category;
 import app.outlay.domain.model.Expense;
+import app.outlay.impl.AndroidLogger;
 import app.outlay.mvp.presenter.ExpenseDetailsPresenter;
 import app.outlay.mvp.view.ExpenseDetailsView;
 import app.outlay.utils.IconUtils;
@@ -75,6 +77,7 @@ public class ExpensesDetailsFragment extends BaseMvpFragment<ExpenseDetailsView,
     private Expense expense;
     private Category selectedCategory;
     private Date defaultDate;
+    private AndroidLogger androidLogger = new AndroidLogger();
 
     @Override
     public ExpenseDetailsPresenter createPresenter() {
@@ -126,22 +129,24 @@ public class ExpensesDetailsFragment extends BaseMvpFragment<ExpenseDetailsView,
         switch (item.getItemId()) {
             case app.outlay.R.id.action_save:
                 if (validateInput()) {
-                    Expense expense = getExpense();
-                    if (TextUtils.isEmpty(expense.getId())) {
-                        analytics().trackExpenseCreated(expense);
+                    Expense localExpense = getExpense();
+                    if (TextUtils.isEmpty(localExpense.getId())) {
+                        analytics().trackExpenseCreated(localExpense);
                     } else {
-                        analytics().trackExpenseUpdated(expense);
+                        analytics().trackExpenseUpdated(localExpense);
                     }
-                    expenseDetailsPresenter.updateExpense(expense);
+                    expenseDetailsPresenter.updateExpense(localExpense);
                     getActivity().onBackPressed();
                 }
                 break;
             case app.outlay.R.id.action_delete:
-                Expense expense = getExpense();
-                analytics().trackExpenseDeleted(expense);
-                expenseDetailsPresenter.deleteExpense(expense);
+                Expense localExpense = getExpense();
+                analytics().trackExpenseDeleted(localExpense);
+                expenseDetailsPresenter.deleteExpense(localExpense);
                 getActivity().onBackPressed();
                 break;
+            default:
+                androidLogger.warn(Constants.DEFAULT_BRANCH_REACHED);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -253,7 +258,6 @@ public class ExpensesDetailsFragment extends BaseMvpFragment<ExpenseDetailsView,
         }
 
         if (TextUtils.isEmpty(amount.getText())) {
-            //TODO validate number
             amountInputLayout.setError(getString(app.outlay.R.string.error_amount_invalid));
             amountInputLayout.requestFocus();
             result = false;

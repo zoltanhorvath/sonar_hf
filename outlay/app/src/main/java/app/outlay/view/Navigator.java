@@ -23,6 +23,9 @@ import app.outlay.view.fragment.ReportFragment;
  * Created by Bogdan Melnychuk on 1/24/16.
  */
 public final class Navigator {
+    private Navigator() {
+    }
+
     public static void goToCategoryDetails(FragmentActivity activityFrom, String categoryId) {
         Bundle b = new Bundle();
         if (categoryId != null) {
@@ -71,12 +74,6 @@ public final class Navigator {
         changeFragment(activityFrom, ExpensesListFragment.class, b);
     }
 
-    public static void goToExpenseDetails(FragmentActivity activityFrom, Expense expense, boolean newActivity) {
-        Bundle b = new Bundle();
-        b.putString(ExpensesDetailsFragment.ARG_EXPENSE_ID, expense.getId());
-        b.putLong(ExpensesDetailsFragment.ARG_DATE, expense.getReportedWhen().getTime());
-        SingleFragmentActivity.start(activityFrom, ExpensesDetailsFragment.class, b);
-    }
 
     public static void goToExpenseDetails(FragmentActivity activityFrom, Expense expense) {
         Bundle b = new Bundle();

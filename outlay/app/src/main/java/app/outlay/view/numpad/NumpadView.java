@@ -8,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import app.outlay.Constants;
+import app.outlay.impl.AndroidLogger;
+
 /**
  * Created by Bogdan Melnychuk on 1/15/16.
  */
@@ -15,6 +18,8 @@ public class NumpadView extends LinearLayout implements View.OnClickListener {
     private NumpadClickListener numpadClickListener;
     private NumpadEditable attachedEditable;
     private NumpadValidator validator;
+    private AndroidLogger androidLogger = new AndroidLogger();
+
     public NumpadView(Context context) {
         super(context);
         init();
@@ -117,6 +122,8 @@ public class NumpadView extends LinearLayout implements View.OnClickListener {
             case app.outlay.R.id.btnDecimal:
                 onDecimalCLicked();
                 break;
+            default:
+                androidLogger.warn(Constants.DEFAULT_BRANCH_REACHED);
         }
     }
 

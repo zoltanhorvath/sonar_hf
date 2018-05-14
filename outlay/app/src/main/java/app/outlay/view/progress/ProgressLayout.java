@@ -139,10 +139,6 @@ public class ProgressLayout extends View implements Animatable {
         return (currentProgress * mWidth) / maxProgress;
     }
 
-    public boolean isPlaying() {
-        return isPlaying;
-    }
-
     public void cancel() {
         isPlaying = false;
         currentProgress = 0;

@@ -9,6 +9,9 @@ import android.view.View;
  * Created by Bogdan Melnychuk on 2/6/16.
  */
 public final class Alert {
+    private Alert() {
+    }
+
     public static void info(View view, String message) {
         info(view, message, null);
     }

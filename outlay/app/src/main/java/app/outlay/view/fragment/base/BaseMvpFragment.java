@@ -45,10 +45,8 @@ public abstract class BaseMvpFragment<V extends MvpView, P extends MvpPresenter<
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                getActivity().onBackPressed();
-                break;
+        if (item.getItemId() == android.R.id.home) {
+            getActivity().onBackPressed();
         }
         return super.onOptionsItemSelected(item);
     }

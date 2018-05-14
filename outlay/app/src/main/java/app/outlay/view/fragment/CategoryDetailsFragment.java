@@ -19,7 +19,9 @@ import java.util.Random;
 
 import javax.inject.Inject;
 
+import app.outlay.Constants;
 import app.outlay.domain.model.Category;
+import app.outlay.impl.AndroidLogger;
 import app.outlay.mvp.presenter.CategoryDetailsPresenter;
 import app.outlay.mvp.view.CategoryDetailsView;
 import app.outlay.utils.IconUtils;
@@ -56,6 +58,7 @@ public class CategoryDetailsFragment extends BaseMvpFragment<CategoryDetailsView
 
     private IconsGridAdapter adapter;
     private Category category;
+    private AndroidLogger androidLogger = new AndroidLogger();
 
     @Override
     public CategoryDetailsPresenter createPresenter() {
@@ -71,8 +74,7 @@ public class CategoryDetailsFragment extends BaseMvpFragment<CategoryDetailsView
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(app.outlay.R.layout.fragment_category_details, null, false);
-        return view;
+        return inflater.inflate(app.outlay.R.layout.fragment_category_details, null, false);
     }
 
     @Override
@@ -91,21 +93,23 @@ public class CategoryDetailsFragment extends BaseMvpFragment<CategoryDetailsView
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case app.outlay.R.id.action_save:
-                Category category = getCategory();
-                if (validateCategory(category)) {
-                    if (TextUtils.isEmpty(category.getId())) {
-                        analytics().trackCategoryCreated(category);
+                Category localCategory = getCategory();
+                if (validateCategory(localCategory)) {
+                    if (TextUtils.isEmpty(localCategory.getId())) {
+                        analytics().trackCategoryCreated(localCategory);
                     } else {
-                        analytics().trackCategoryUpdated(category);
+                        analytics().trackCategoryUpdated(localCategory);
                     }
                     categoryDetailsPresenter.updateCategory(getCategory());
                 }
                 break;
             case app.outlay.R.id.action_delete:
-                category = getCategory();
-                analytics().trackCategoryDeleted(category);
-                categoryDetailsPresenter.deleteCategory(category);
+                localCategory = getCategory();
+                analytics().trackCategoryDeleted(localCategory);
+                categoryDetailsPresenter.deleteCategory(localCategory);
                 break;
+            default:
+                androidLogger.warn(Constants.DEFAULT_BRANCH_REACHED);
         }
         return super.onOptionsItemSelected(item);
     }

@@ -7,6 +7,10 @@ import android.content.res.Resources;
  */
 
 public class ViewHelper {
+    private ViewHelper() {
+
+    }
+
     public static int dpToPx(int dp) {
         return Math.round(dp * Resources.getSystem().getDisplayMetrics().density);
     }

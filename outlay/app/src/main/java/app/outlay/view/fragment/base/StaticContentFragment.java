@@ -39,10 +39,8 @@ public class StaticContentFragment extends Fragment implements BaseFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                getActivity().onBackPressed();
-                break;
+        if (item.getItemId() == android.R.id.home) {
+            getActivity().onBackPressed();
         }
         return super.onOptionsItemSelected(item);
     }

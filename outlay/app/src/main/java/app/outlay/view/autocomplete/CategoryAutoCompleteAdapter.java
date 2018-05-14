@@ -15,10 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.outlay.domain.model.Category;
+import app.outlay.impl.AndroidLogger;
 import app.outlay.utils.IconUtils;
 
 public class CategoryAutoCompleteAdapter extends BaseAdapter implements Filterable {
-
+    private AndroidLogger androidLogger = new AndroidLogger();
     private List<Category> items;
     private List<Category> suggestions;
     Filter nameFilter = new Filter() {
@@ -39,7 +40,7 @@ public class CategoryAutoCompleteAdapter extends BaseAdapter implements Filterab
                         }
                     }
                 } catch (Exception e) {
-
+                    androidLogger.error("Failed to filter: constraint = " + constraint);
                 }
                 filterResults.values = suggestions;
                 filterResults.count = suggestions.size();

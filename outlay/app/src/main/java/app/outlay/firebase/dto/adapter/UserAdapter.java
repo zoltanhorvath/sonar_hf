@@ -9,6 +9,9 @@ import app.outlay.domain.model.User;
  */
 
 public class UserAdapter {
+    private UserAdapter() {
+    }
+
     public static User fromFirebaseUser(FirebaseUser fbUser) {
         User result = new User();
         result.setAnonymous(fbUser.isAnonymous());
@@ -16,8 +19,5 @@ public class UserAdapter {
         result.setId(fbUser.getUid());
         result.setEmail(fbUser.getEmail());
         return result;
-    }
-
-    private UserAdapter() {
     }
 }

@@ -40,9 +40,6 @@ public class ExpensesListFragment extends BaseMvpFragment<ExpensesView, Expenses
     public static final String ARG_DATE_FROM = "_argDateFrom";
     public static final String ARG_DATE_TO = "_argDateTo";
 
-    private static final int MODE_LIST = 0;
-    private static final int MODE_GRID = 1;
-
     @Bind(app.outlay.R.id.recyclerView)
     RecyclerView recyclerView;
 
@@ -72,8 +69,6 @@ public class ExpensesListFragment extends BaseMvpFragment<ExpensesView, Expenses
     private Date dateTo;
     private String categoryId;
 
-    private int mode = MODE_LIST;
-
     @Override
     public ExpensesListPresenter createPresenter() {
         return expensesListPresenter;
@@ -97,8 +92,7 @@ public class ExpensesListFragment extends BaseMvpFragment<ExpensesView, Expenses
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(app.outlay.R.layout.fragment_expenses_list, null, false);
-        return view;
+        return inflater.inflate(app.outlay.R.layout.fragment_expenses_list, null, false);
     }
 
     @Override
@@ -113,11 +107,6 @@ public class ExpensesListFragment extends BaseMvpFragment<ExpensesView, Expenses
         fab.setImageDrawable(getResourceHelper().getFabIcon(app.outlay.R.string.ic_material_add));
         fab.setOnClickListener(v -> Navigator.goToExpenseDetails(getActivity(), null));
         recyclerView.setHasFixedSize(true);
-
-//            adapter = new GridExpensesAdapter();
-//            StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
-//            recyclerView.setLayoutManager(staggeredGridLayoutManager);
-
         adapter = new ListExpensesAdapter();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);

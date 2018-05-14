@@ -19,6 +19,7 @@ import java.util.List;
 import app.outlay.Constants;
 import app.outlay.R;
 import app.outlay.domain.model.User;
+import app.outlay.impl.AndroidLogger;
 import app.outlay.view.activity.SingleFragmentActivity;
 import app.outlay.view.alert.Alert;
 import app.outlay.view.fragment.AboutFragment;
@@ -38,6 +39,7 @@ public abstract class DrawerActivity extends ParentActivity {
     private static final int ITEM_CREATE_USER = 5;
     private static final int ITEM_ANALYSIS = 6;
     private static final int ITEM_SETTINGS = 7;
+    private AndroidLogger androidLogger = new AndroidLogger();
 
     private Drawer mainDrawer;
 
@@ -112,6 +114,8 @@ public abstract class DrawerActivity extends ParentActivity {
                             case ITEM_CREATE_USER:
                                 createUser();
                                 break;
+                            default:
+                                androidLogger.warn(Constants.DEFAULT_BRANCH_REACHED);
                         }
 
                         mainDrawer.setSelection(-1);

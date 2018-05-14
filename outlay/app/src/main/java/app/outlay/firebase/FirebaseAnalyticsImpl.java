@@ -2,7 +2,6 @@ package app.outlay.firebase;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -11,10 +10,12 @@ import java.util.Date;
 import javax.inject.Inject;
 
 import app.outlay.BuildConfig;
+import app.outlay.Constants;
 import app.outlay.analytics.Analytics;
 import app.outlay.core.utils.DateUtils;
 import app.outlay.domain.model.Category;
 import app.outlay.domain.model.Expense;
+import app.outlay.impl.AndroidLogger;
 import app.outlay.impl.AppPreferences;
 
 /**
@@ -23,6 +24,7 @@ import app.outlay.impl.AppPreferences;
 
 public class FirebaseAnalyticsImpl implements Analytics {
     private FirebaseAnalytics mFirebaseAnalytics;
+    private AndroidLogger androidLogger = new AndroidLogger();
 
     @Inject
     public FirebaseAnalyticsImpl(Context context) {
@@ -183,7 +185,7 @@ public class FirebaseAnalyticsImpl implements Analytics {
                 trackEvent("theme_light_used", null);
                 break;
             default:
-                Log.w("", "Default branch reached");
+                androidLogger.warn(Constants.DEFAULT_BRANCH_REACHED);
         }
     }
 

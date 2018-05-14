@@ -19,6 +19,9 @@ import app.outlay.utils.DeviceUtils;
  * Created by bogdan.melnychuk on 09.12.2014.
  */
 public final class AnimationUtils {
+    private AnimationUtils() {
+    }
+
     public static void animateBounceIn(final View target) {
         AnimatorSet set = new AnimatorSet();
         set.playTogether(

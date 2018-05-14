@@ -17,7 +17,7 @@ public class SingleFragmentActivity extends ParentActivity {
         if (bundle != null) {
             intent.putExtras(bundle);
         }
-        intent.putExtra("fragment", fragmentClass);
+        intent.putExtra(FRAGMENT_PARAM, fragmentClass);
         context.startActivity(intent);
     }
 

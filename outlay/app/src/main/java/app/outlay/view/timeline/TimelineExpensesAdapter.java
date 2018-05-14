@@ -51,8 +51,7 @@ public class TimelineExpensesAdapter extends RecyclerView.Adapter<TimelineExpens
     public TimelineExpensesAdapter.ExpenseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         final View v = inflater.inflate(R.layout.timeline_recycler_expense, parent, false);
-        final ExpenseViewHolder viewHolder = new ExpenseViewHolder(v);
-        return viewHolder;
+        return new ExpenseViewHolder(v);
     }
 
     @Override
@@ -91,8 +90,7 @@ public class TimelineExpensesAdapter extends RecyclerView.Adapter<TimelineExpens
     public ExpenseHeaderViewHolder onCreateHeaderViewHolder(ViewGroup parent) {
         final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         final View v = inflater.inflate(R.layout.timeline_recycler_header, parent, false);
-        final ExpenseHeaderViewHolder viewHolder = new ExpenseHeaderViewHolder(v);
-        return viewHolder;
+        return new ExpenseHeaderViewHolder(v);
     }
 
     @Override

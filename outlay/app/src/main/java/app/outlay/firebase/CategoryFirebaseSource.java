@@ -1,5 +1,6 @@
 package app.outlay.firebase;
 
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.google.firebase.database.DataSnapshot;
@@ -110,20 +111,14 @@ public class CategoryFirebaseSource implements CategoryDataSource {
 
     @Override
     public Observable<Category> save(Category category) {
-        Observable<Category> saveCategory = Observable.create(subscriber -> {
+        return Observable.create(subscriber -> {
             String key = category.getId();
             if (TextUtils.isEmpty(key)) {
                 key = mDatabase.child(USERS).child(currentUser.getId()).child(CATEGORIES).push().getKey();
                 category.setId(key);
             }
 
-            //TODO move this
-            Map<String, Object> childUpdates = new HashMap<>();
-            childUpdates.put("id", category.getId());
-            childUpdates.put("title", category.getTitle());
-            childUpdates.put("icon", category.getIcon());
-            childUpdates.put("color", category.getColor());
-            childUpdates.put("order", category.getOrder());
+            Map<String, Object> childUpdates = getStringObjectMap(category);
 
             DatabaseReference dbRef = mDatabase
                     .child(USERS)
@@ -148,7 +143,17 @@ public class CategoryFirebaseSource implements CategoryDataSource {
 
             dbRef.updateChildren(childUpdates);
         });
-        return saveCategory;
+    }
+
+    @NonNull
+    private Map<String, Object> getStringObjectMap(Category category) {
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("id", category.getId());
+        childUpdates.put("title", category.getTitle());
+        childUpdates.put("icon", category.getIcon());
+        childUpdates.put("color", category.getColor());
+        childUpdates.put("order", category.getOrder());
+        return childUpdates;
     }
 
     @Override

@@ -101,7 +101,6 @@ public class ReportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     onItemClickListener.onItemClicked(currentCategory, currentReport);
                 }
             });
-            //reportHolder.progressLayout.setLoadedColor(currentReport.getColor());
         } else if (holder instanceof ChartViewHolder) {
             ChartViewHolder charViewHolder = (ChartViewHolder) holder;
             Context context = charViewHolder.chart.getContext();
@@ -128,13 +127,10 @@ public class ReportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 charViewHolder.chart.invalidate();
             });
 
-            //charViewHolder.chart.animateY(1000, Easing.EasingOption.EaseInOutQuad);
+
             charViewHolder.chart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
                 @Override
                 public void onValueSelected(Entry e, Highlight h) {
-                    if (onItemClickListener != null) {
-                        //onItemClickListener.onItemClicked(reports.get(h.getXIndex()));
-                    }
                 }
 
                 @Override

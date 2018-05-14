@@ -66,18 +66,15 @@ public class CategoriesGridAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         final LayoutInflater inflater = LayoutInflater.from(context);
-        switch (viewType) {
-            case HEADER:
-                final View numpadView = inflater.inflate(app.outlay.R.layout.recycler_numpad, parent, false);
-                GridLayoutManager.LayoutParams params = (GridLayoutManager.LayoutParams) numpadView.getLayoutParams();
-                params.height = parent.getMeasuredHeight() - (context.getResources().getDimensionPixelSize(app.outlay.R.dimen.category_item_height) * 2);
 
-                final NumpadViewHolder viewHolder = new NumpadViewHolder(numpadView);
-                return viewHolder;
-            default:
-                final View catView = inflater.inflate(app.outlay.R.layout.item_category, parent, false);
-                final CategoryViewHolder categoryViewHolder = new CategoryViewHolder(catView);
-                return categoryViewHolder;
+        if (viewType == HEADER) {
+            final View numpadView = inflater.inflate(app.outlay.R.layout.recycler_numpad, parent, false);
+            GridLayoutManager.LayoutParams params = (GridLayoutManager.LayoutParams) numpadView.getLayoutParams();
+            params.height = parent.getMeasuredHeight() - (context.getResources().getDimensionPixelSize(app.outlay.R.dimen.category_item_height) * 2);
+            return new NumpadViewHolder(numpadView);
+        } else {
+            final View catView = inflater.inflate(app.outlay.R.layout.item_category, parent, false);
+            return new CategoryViewHolder(catView);
         }
     }
 
