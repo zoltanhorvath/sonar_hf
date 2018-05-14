@@ -3,6 +3,7 @@ package app.outlay.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import com.github.johnkil.print.PrintDrawable;
 
@@ -15,6 +16,7 @@ import app.outlay.view.OutlayTheme;
 public class ResourceHelper {
     private Activity context;
     private OutlayTheme theme;
+    private static final String TAG = "ResourceHelper";
 
     public ResourceHelper(
             OutlayTheme theme,
@@ -55,7 +57,7 @@ public class ResourceHelper {
         try {
             return context.getResources().getIdentifier(pVariableName, pResourcename, context.getPackageName());
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "ResourceId not found: pResourcename = " + pResourcename, e);
             return -1;
         }
     }
@@ -72,7 +74,7 @@ public class ResourceHelper {
         try {
             return context.getResources().getIdentifier(stringResName, "integer", context.getPackageName());
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "Resource not found: stringResName = " + stringResName, e);
             return -1;
         }
     }
